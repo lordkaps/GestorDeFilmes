@@ -8,7 +8,7 @@ namespace GestorDeFilmes.Core.Services
         private readonly HttpClient _httpClient;
         private const string UrlBase = "https://api.themoviedb.org/3/";
 
-        public TMDbService(HttpClient httpClient) => _httpClient = httpClient;
+        public TMDbService() => _httpClient = new HttpClient();
        
         public async Task<List<Filme>> PesquisaFilmesAsync(string query)
         {

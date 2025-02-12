@@ -1,24 +1,25 @@
-﻿namespace GestorDeFilmes
+﻿using GestorDeFilmes.Core.Services;
+
+namespace GestorDeFilmes
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly TMDbService _movieService;
 
         public MainPage()
         {
             InitializeComponent();
+            _movieService = new TMDbService();
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private async void OnSearchPressed(object sender, EventArgs e)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            string query = SearchBarMovies.Text;
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var movies = await _movieService.PesquisaFilmesAsync(query);
+                MoviesCollectionView.ItemsSource = movies;
+            }
         }
     }
 
