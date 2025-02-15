@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.augustokaps.gestordefilmes">
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:supportsRtl="true" android:usesCleartextTraffic="true" android:label="Gestor de Filmes">
+		<activity android:name="com.augustokaps.gestordefilmes.MainActivity"
+    android:exported="true"
+    android:theme="@style/Maui.SplashTheme"
+    android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
+			<intent-filter>
+				<data android:scheme="meuapp" android:host="callback" />
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+			</intent-filter>
+		</activity>
+	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 </manifest>
