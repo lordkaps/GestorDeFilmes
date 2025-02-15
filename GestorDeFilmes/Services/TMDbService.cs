@@ -127,6 +127,23 @@ namespace GestorDeFilmes.Services
             }
             return null;
         }
+
+        public async Task AdicionarFilmeFavorito(int accountId, int filmeId, bool favorito, string sessionId)
+        {
+            var url = $"{TMDbSettings.UrlBase}account/{accountId}/favorite?session_id={sessionId}";
+
+            var data = new
+            {
+                media_type = "movie",
+                media_id = filmeId,
+                favorite = favorito
+            };
+
+            var jsonData = JsonSerializer.Serialize(data);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.PostAsync(url, content);
+        }
     }
 
     public class Sessao

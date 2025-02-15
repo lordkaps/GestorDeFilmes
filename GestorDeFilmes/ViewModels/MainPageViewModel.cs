@@ -38,9 +38,11 @@ namespace GestorDeFilmes.ViewModels
 
         private readonly HttpClient _httpClient = new();
         private readonly TMDbService _tmdbService = new();
+        private Usuario _usuarioLogado;
+        private Sessao _sessao;
 
         public TaskCompletionSource<string> TaskCompletion;
-        public Usuario UsuarioLogado;
+
 
         public MainPageViewModel()
         {
@@ -123,17 +125,16 @@ namespace GestorDeFilmes.ViewModels
             var autorizacao = await TaskCompletion.Task;
 
             var token = _tmdbService.ExtraiaToken(autorizacao);
-            var sessao = await _tmdbService.ObtenhaSessao(token);
-            var usuario = await _tmdbService.ObtenhaUsuario(sessao);
+            _sessao = await _tmdbService.ObtenhaSessao(token);
+            _usuarioLogado = await _tmdbService.ObtenhaUsuario(_sessao);
 
             Deslogado = false;
-            UsuarioLogado = usuario;
-            TituloPersonalizado = $"{usuario.NomeUsuario} Id: {usuario.IDUsuario}";
+            TituloPersonalizado = $"{_usuarioLogado.NomeUsuario} Id: {_usuarioLogado.IDUsuario}";
             TextoLogin = "Deslogar";
 
             await MainThread.InvokeOnMainThreadAsync(async () =>
             {
-                await Application.Current.MainPage.DisplayAlert("Olaaaaa!!", $"Seja bem vindo ao aplicativo {usuario.NomeUsuario}\r\n seu codigo de usuario é {usuario.IDUsuario}", "ok");
+                await Application.Current.MainPage.DisplayAlert("Olaaaaa!!", $"Seja bem vindo ao aplicativo {_usuarioLogado.NomeUsuario}\r\n seu codigo de usuario é {_usuarioLogado.IDUsuario}", "ok");
             });
         }
 
@@ -141,6 +142,8 @@ namespace GestorDeFilmes.ViewModels
         {
             ListaFilmeFavorito = ListaFilme.Where(f => f.Favorito).ToList();
             DataBaseLocal.SalvarListaDeFilmes(ListaFilmeFavorito);
+            if (!Deslogado)
+                SincronizaFavoritosComAPI();
         }
 
         private void MarcaFavoritosSalvos()
@@ -152,6 +155,17 @@ namespace GestorDeFilmes.ViewModels
                     filme.Favorito = true;
                 }
             });
+        }
+
+        private void SincronizaFavoritosComAPI()
+        {
+            if (ListaFilmeFavorito != null && ListaFilmeFavorito.Count > 0) 
+            {
+                ListaFilmeFavorito.ForEach(async f => 
+                {
+                    await _tmdbService.AdicionarFilmeFavorito(_usuarioLogado.IDUsuario, f.Id, f.Favorito, _sessao.SessaoCode); 
+                });
+            }
         }
     }
 
