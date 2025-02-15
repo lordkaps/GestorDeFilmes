@@ -45,11 +45,22 @@ namespace GestorDeFilmes.ViewModels
         public MainPageViewModel()
         {
             CarregamentoInicial();
+            ListaFilmeFavorito = DataBaseLocal.RecuperarListaDeFilmes();
         }
 
         private async void CarregamentoInicial()
         {
-            ListaFilme = await _tmdbService.GetListaInicial();
+            try
+            {
+                ListaFilme = await _tmdbService.GetListaInicial();
+            }
+            catch (Exception ex)
+            {
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Erro", $"Ocorreu um erro: {ex.Message}", "OK");
+                });
+            }
         }
 
         [RelayCommand]
@@ -64,7 +75,7 @@ namespace GestorDeFilmes.ViewModels
             {
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
-                    await Shell.Current.DisplayAlert("Erro", $"Ocorreu um erro: {ex.Message}", "OK");
+                    await Application.Current.MainPage.DisplayAlert("Erro", $"Ocorreu um erro: {ex.Message}", "OK");
                 });
             }
         }
@@ -127,8 +138,9 @@ namespace GestorDeFilmes.ViewModels
         private void AtualizaListaFavorito()
         {
             ListaFilmeFavorito = ListaFilme.Where(f => f.Favorito).ToList();
+            DataBaseLocal.SalvarListaDeFilmes(ListaFilmeFavorito);
         }
     }
 
-    
+
 }

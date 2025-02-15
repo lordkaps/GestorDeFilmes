@@ -82,7 +82,6 @@ namespace GestorDeFilmes.Services
             await Launcher.OpenAsync(authUrl);
         }
 
-
         internal async Task<Sessao> ObtenhaSessao(string url)
         {
             var validateUrl = $"https://api.themoviedb.org/3/authentication/session/new?api_key={TMDbSettings.ApiKey}";
