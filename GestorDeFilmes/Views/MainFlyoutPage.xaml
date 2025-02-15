@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GestorDeFilmes.Views.MainFlyoutPage"
+             Title="MainFlyoutPage">
+    <FlyoutPage.Flyout>
+        <ContentPage Title="Filmes">
+            <Grid RowDefinitions="Auto, *" RowSpacing="5">
+                <Frame Grid.Row="0" VerticalOptions="FillAndExpand" Padding="5">
+                    <StackLayout Orientation="Vertical">
+                        <Label Text="{Binding TituloPersonalizado}"
+           FontSize="10"
+           FontAttributes="Bold"/>
+                        <Button Command="{Binding LogarCommand}"
+            Text="{Binding TextoLogin}"
+            IsVisible="{Binding Deslogado}"/>
+                        <SearchBar x:Name="SearchBarMovies" 
+               Text="{Binding SearchText}"
+               Placeholder="Buscar filmes..." 
+               SearchCommand="{Binding SearchCommand}"
+               SearchCommandParameter="{Binding SearchText}"
+               />
+                    </StackLayout>
+                </Frame>
+
+                <ScrollView Grid.Row="1">
+                    <VerticalStackLayout Padding="20">
+                        <CollectionView ItemsSource="{Binding ListaFilme}" 
+                SelectionMode="Single"
+                SelectionChangedCommand="{Binding AbrirDetalhesCommand}"
+                SelectionChangedCommandParameter="{Binding Source={RelativeSource Self}, Path=SelectedItem}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="10" ColumnDefinitions="100, *" ColumnSpacing="2">
+                                        <Image Source="{Binding FullPosterUrl}"
+                       WidthRequest="100"
+                       HeightRequest="150"
+                       Aspect="AspectFill"
+                       Grid.Column="0"/>
+
+                                        <Frame Grid.Column="1" Padding="10">
+                                            <StackLayout>
+                                                <Label Text="{Binding Title}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               LineBreakMode="TailTruncation"/>
+
+                                                <Label Text="{Binding Overview}"
+                               FontSize="12"
+                               LineBreakMode="WordWrap"
+                               MaxLines="7"
+                               HorizontalOptions="Fill"
+                               VerticalOptions="Start"
+                               WidthRequest="200"/>
+                                            </StackLayout>
+                                        </Frame>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </ScrollView>
+            </Grid>
+        </ContentPage>
+    </FlyoutPage.Flyout>
+    <FlyoutPage.Detail>
+        <ContentPage Title="Favoritos">
+            
+        </ContentPage>
+    </FlyoutPage.Detail>
+</FlyoutPage>
