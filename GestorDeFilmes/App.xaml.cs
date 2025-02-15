@@ -1,4 +1,6 @@
-﻿namespace GestorDeFilmes
+﻿using GestorDeFilmes.Views;
+
+namespace GestorDeFilmes
 {
     public partial class App : Application
     {
@@ -6,7 +8,12 @@
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            if (DeviceInfo.Platform == DevicePlatform.iOS)
+                MainPage = new NavigationPage(new MainFlyoutPage());
+            else
+                MainPage = new NavigationPage(new MainTabbedPage()); 
+
+            //MainPage = new AppShell();
         }
     }
 }
