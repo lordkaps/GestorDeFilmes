@@ -52,7 +52,7 @@
                                             CommandParameter="{Binding .}"
                                             BackgroundColor="Transparent"
                                             FontSize="20"
-                                            TextColor="Gray"
+                                            TextColor="{Binding CorFavorito}"
                                             HeightRequest="40"
                                             CornerRadius="20"/>
 

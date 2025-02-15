@@ -53,6 +53,8 @@ namespace GestorDeFilmes.ViewModels
             try
             {
                 ListaFilme = await _tmdbService.GetListaInicial();
+                if (ListaFilme != null)
+                    MarcaFavoritosSalvos();
             }
             catch (Exception ex)
             {
@@ -139,6 +141,17 @@ namespace GestorDeFilmes.ViewModels
         {
             ListaFilmeFavorito = ListaFilme.Where(f => f.Favorito).ToList();
             DataBaseLocal.SalvarListaDeFilmes(ListaFilmeFavorito);
+        }
+
+        private void MarcaFavoritosSalvos()
+        {
+            ListaFilme.ForEach(filme =>
+            {
+                if (ListaFilmeFavorito.Any(f => f.Id == filme.Id))
+                {
+                    filme.Favorito = true;
+                }
+            });
         }
     }
 
