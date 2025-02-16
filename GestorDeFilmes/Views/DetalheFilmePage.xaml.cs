@@ -10,4 +10,11 @@ public partial class DetalheFilmePage : ContentPage
 		InitializeComponent();
         BindingContext = new DetalheFilmeViewModel();
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        if (BindingContext is DetalheFilmeViewModel viewModel)
+            viewModel.OnAppearing();
+    }
 }

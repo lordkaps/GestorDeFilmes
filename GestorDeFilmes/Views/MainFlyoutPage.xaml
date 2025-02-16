@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <FlyoutPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GestorDeFilmes.Views.MainFlyoutPage"
-             Title="MainFlyoutPage">
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="GestorDeFilmes.Views.MainFlyoutPage"
+            Title="MainFlyoutPage"
+            xmlns:vm="clr-namespace:GestorDeFilmes.ViewModels">
     <FlyoutPage.Flyout>
         <ContentPage Title="Filmes">
             <Grid RowDefinitions="Auto, *" RowSpacing="5">
@@ -65,7 +66,47 @@
     </FlyoutPage.Flyout>
     <FlyoutPage.Detail>
         <ContentPage Title="Favoritos">
-            
+            <VerticalStackLayout Padding="20">
+                <ScrollView>
+                    <CollectionView ItemsSource="{Binding ListaFilmeFavorito}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10" ColumnDefinitions="100, *" ColumnSpacing="2" Margin="0" VerticalOptions="FillAndExpand">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainPageViewModel}}, Path=AbrirDetalhesCommand}" 
+                                            CommandParameter="{Binding .}" />
+                                    </Grid.GestureRecognizers>
+
+                                    <Image Grid.Column="0"
+                                           Source="{Binding FullPosterUrl}"
+                                           WidthRequest="100"
+                                           HeightRequest="150"
+                                           Aspect="AspectFill"
+                                           />
+
+                                    <Frame Grid.Column="1" Padding="10" InputTransparent="True">
+                                        <StackLayout InputTransparent="True">
+                                            <Label Text="{Binding Title}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   LineBreakMode="TailTruncation"/>
+
+                                            <Label Text="{Binding Overview}"
+                                                   FontSize="12"
+                                                   LineBreakMode="WordWrap"
+                                                   MaxLines="7"
+                                                   HorizontalOptions="Fill"
+                                                   VerticalOptions="Start"
+                                                   WidthRequest="200"/>
+                                        </StackLayout>
+                                    </Frame>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+            </VerticalStackLayout>
         </ContentPage>
     </FlyoutPage.Detail>
 </FlyoutPage>

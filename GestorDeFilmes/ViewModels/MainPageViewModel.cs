@@ -1,17 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using GestorDeFilmes.Core.Utils;
 using GestorDeFilmes.Models;
 using GestorDeFilmes.Services;
 using GestorDeFilmes.Views;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+using Plugin.FirebasePushNotifications;
 
 namespace GestorDeFilmes.ViewModels
 {
@@ -44,7 +37,9 @@ namespace GestorDeFilmes.ViewModels
         public TaskCompletionSource<string> TaskCompletion;
 
 
-        public MainPageViewModel()
+        public MainPageViewModel() { }
+
+        public async void OnAppearing()
         {
             CarregamentoInicial();
             ListaFilmeFavorito = DataBaseLocal.RecuperarListaDeFilmes();
@@ -110,7 +105,7 @@ namespace GestorDeFilmes.ViewModels
         }
 
         [RelayCommand]
-        private async Task MarcarComoFavorito(Filme filme)
+        private void MarcarComoFavorito(Filme filme)
         {
             if (filme == null) return;
             filme.Favorito = !filme.Favorito;

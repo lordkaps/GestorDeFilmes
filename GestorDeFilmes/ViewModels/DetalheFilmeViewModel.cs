@@ -1,12 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using GestorDeFilmes.Core.Utils;
 using GestorDeFilmes.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GestorDeFilmes.ViewModels
 {
@@ -15,7 +9,9 @@ namespace GestorDeFilmes.ViewModels
         [ObservableProperty]
         public Filme filme = new();
 
-        public DetalheFilmeViewModel()
+        public DetalheFilmeViewModel(){}
+
+        public async void OnAppearing()
         {
             CarregaFilme();
         }
