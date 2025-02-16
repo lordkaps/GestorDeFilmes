@@ -42,6 +42,7 @@ namespace GestorDeFilmes.ViewModels
         public async void OnAppearing()
         {
             CarregamentoInicial();
+            GetPermissaoNotification();
             ListaFilmeFavorito = DataBaseLocal.RecuperarListaDeFilmes();
         }
 
@@ -161,6 +162,18 @@ namespace GestorDeFilmes.ViewModels
                     await _tmdbService.AdicionarFilmeFavorito(_usuarioLogado.IDUsuario, f.Id, f.Favorito, _sessao.SessaoCode); 
                 });
             }
+        }
+
+        private async void GetPermissaoNotification()
+        {
+            var authorizationStatusEnum = await INotificationPermissions.Current.GetAuthorizationStatusAsync();
+            if (authorizationStatusEnum != Plugin.FirebasePushNotifications.Model.AuthorizationStatus.Granted)
+            {
+                await INotificationPermissions.Current.RequestPermissionAsync();
+            }
+
+            if (authorizationStatusEnum == Plugin.FirebasePushNotifications.Model.AuthorizationStatus.Granted)
+                await IFirebasePushNotification.Current.RegisterForPushNotificationsAsync();
         }
     }
 
