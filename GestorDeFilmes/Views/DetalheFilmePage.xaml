@@ -21,6 +21,16 @@
                 <Label Text="{Binding Filme.Overview}"
                        FontSize="16"
                        LineBreakMode="WordWrap"/>
+                <Label Text="{Binding Lancamento}"
+                       FontSize="16"
+                       LineBreakMode="WordWrap"/>
+                <Button Text="&#xf14d;"
+                        FontFamily="FontAwesome"
+                        FontSize="40"
+                        TextColor="BlueViolet"
+                        BackgroundColor="Transparent"
+                        HorizontalOptions="End"
+                        Command="{Binding CompartilharCommand}"/>
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>

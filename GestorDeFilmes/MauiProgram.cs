@@ -14,6 +14,7 @@ namespace GestorDeFilmes
                 .UseFirebasePushNotifications()
                 .ConfigureFonts(fonts =>
                 {
+                    fonts.AddFont("fa-regular-400.ttf", "FontAwesome");
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
@@ -21,9 +22,6 @@ namespace GestorDeFilmes
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            //builder.Services.AddSingleton<INotificationPermissions>();
-            //builder.Services.AddSingleton<INotificationChannels>();
-            //builder.Services.AddSingleton<IFirebasePushNotification>();
 
             return builder.Build();
         }

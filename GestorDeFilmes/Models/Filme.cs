@@ -21,6 +21,15 @@ namespace GestorDeFilmes.Models
         [JsonPropertyName("poster_path")]
         public string PosterPath { get; set; }
 
+        public string LancamentoFormatado
+        {
+            get
+            {
+                DateTime original = DateTime.ParseExact(ReleaseDate, "yyyy-MM-dd", null);
+                return $"Lançamento: {original.ToString("dd/MM/yyyy")}";
+            }
+        }
+
         public bool Favorito { get; set; }
         public string FullPosterUrl => $"https://image.tmdb.org/t/p/w500{PosterPath}";
 

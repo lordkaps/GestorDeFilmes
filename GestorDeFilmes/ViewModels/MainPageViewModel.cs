@@ -176,6 +176,4 @@ namespace GestorDeFilmes.ViewModels
                 await IFirebasePushNotification.Current.RegisterForPushNotificationsAsync();
         }
     }
-
-
 }
