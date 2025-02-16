@@ -6,17 +6,23 @@ using System.Threading.Tasks;
 
 namespace GestorDeFilmes.Core.Utils
 {
+    /// <summary>
+    /// Classe do tipo Singleton para armazenar e gerenciar parâmetros temporários e utilizar para passar dados/objetos entre as ViewModels.
+    /// Podendo também ser usada em qualquer parte do projeto.
+    /// </summary>
     public class Parameter
     {
         private static Parameter instance;
         private readonly Dictionary<string, object> parameters;
 
-
         public Parameter()
         {
             parameters = new Dictionary<string, object>();
         }
-
+        /// <summary>
+        /// Propriedade que retorna a instância única.
+        /// Se não existir uma instância, ela é criada.
+        /// </summary>
         public static Parameter Instance
         {
             get
@@ -26,11 +32,19 @@ namespace GestorDeFilmes.Core.Utils
             }
         }
 
+        /// <summary>
+        /// Adiciona ou atualiza um parâmetro.
+        /// </summary>
         public void AddParameter(string key, object value)
         {
             parameters[key] = value;
         }
 
+        /// <summary>
+        /// Obtém e remove um parâmetro do dicionário.
+        /// Se a chave existir, retorna o valor e remove do dicionário.
+        /// Caso contrário, retorna null.
+        /// </summary>
         public object GetParameter(string key)
         {
             if (parameters.TryGetValue(key, out var value))
@@ -41,113 +55,24 @@ namespace GestorDeFilmes.Core.Utils
 
             return null;
         }
+
+        /// <summary>
+        /// Remove um parâmetro do dicionário se ele existir, passando a chave.
+        /// </summary>
         public void RemoveParameter(string key)
         {
             if (parameters.TryGetValue(key, out var value))
                 parameters.Remove(key);
         }
 
+        /// <summary>
+        /// Tenta obter um parâmetro e removê-lo do dicionário.
+        /// Retorna true se o parâmetro existir e for recuperado com sucesso.
+        /// </summary>
         public bool TryGetParameter(string key, out object value)
         {
-            var objeto = GetParameter(key);
-            value = null;
-            if (objeto != null)
-            {
-                value = objeto;
-                return true;
-            }
-            return false;
-        }
-
-        public TValue GetParameter<TValue>(string key)
-        {
-            if (parameters.TryGetValue(key, out TValue value))
-            {
-                parameters.Remove(key);
-                return value;
-            }
-            return default;
-        }
-
-        public bool TryGetParameter<TValue>(string key, out TValue value)
-        {
-            if (parameters.TryGetValue(key, out value))
-            {
-                parameters.Remove(key);
-                return true;
-            }
-            return false;
+            value = GetParameter(key);
+            return value != null;
         }
     }
-
-    public static class ParameterExtensions
-    {
-        public static bool TryGetValue<T>(this Dictionary<string, object> parameters, string key, out T value)
-        {
-            foreach (var parameter in parameters)
-            {
-                if (string.Compare(parameter.Key, key, StringComparison.Ordinal) == 0)
-                {
-                    var success = TryGetValueInternal(parameter, typeof(T), out object valueAsObject);
-                    value = (T)valueAsObject;
-                    return success;
-                }
-            }
-
-            value = default;
-            return false;
-        }
-
-        private static bool TryGetValueInternal(KeyValuePair<string, object> parameters, Type type, out object value)
-        {
-            value = GetDefault(type);
-            var success = false;
-            if (parameters.Value == null)
-            {
-                success = true;
-            }
-            else if (parameters.Value.GetType() == type)
-            {
-                success = true;
-                value = parameters.Value;
-            }
-            else if (type.IsAssignableFrom(parameters.Value.GetType()))
-            {
-                success = true;
-                value = parameters.Value;
-            }
-            else if (type.IsEnum)
-            {
-                var valueAsString = parameters.Value.ToString();
-                if (Enum.IsDefined(type, valueAsString))
-                {
-                    success = true;
-                    value = Enum.Parse(type, valueAsString);
-                }
-                else if (int.TryParse(valueAsString, out var numericValue))
-                {
-                    success = true;
-                    value = Enum.ToObject(type, numericValue);
-                }
-            }
-
-            if (!success && type.GetInterface("System.IConvertible") != null)
-            {
-                success = true;
-                value = Convert.ChangeType(parameters.Value, type);
-            }
-
-            return success;
-        }
-
-        private static object GetDefault(Type type)
-        {
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type);
-            }
-            return null;
-        }
-    }
-
 }
