@@ -1,26 +1,61 @@
 # Gestor de Filmes
 
-Gestor de Filmes é um aplicativo móvel desenvolvido com .NET MAUI, projetado para gerenciar e organizar sua coleção de filmes. Ele permite aos usuários buscar, favoritar e visualizar filmes, para Android e iOS.
-
-Este projeto integra-se com a API do TMDb para buscar informações sobre filmes, suporta autenticação via OAuth, armazenamento offline e notificações push com Firebase Cloud Messaging.
+## Descrição
+O **Gestor de Filmes** é um aplicativo mobile desenvolvido em **.NET MAUI** para gerenciamento de filmes, permitindo que os usuários explorem informações sobre filmes e realizem autenticação via **OAuth**. O app integra-se com a API **TMDb** para buscar dados de filmes, armazena informação offline e suporta **notificações push** usando **Firebase Cloud Messaging**.
 
 ## Funcionalidades
+- **Autenticação via OAuth** com a API TMDb
+- **Busca de filmes** em tempo real
+- **Armazenamento offline** de filmes favoritos usando Preferences
+- **Diferenciação da interface** entre Android e iOS
+- **Notificações push** com Firebase Cloud Messaging
 
-- **Integração com TMDb API**: Pesquisa de filmes, obtenção de detalhes e imagens dos filmes diretamente da base de dados do TMDb.
-- **Autenticação via OAuth**: Sistema de login para usuários com autenticação OAuth para garantir segurança.
-- **Armazenamento Offline**: Armazenamento local para que os dados do usuário, como filmes favoritos, sejam acessíveis offline.
-- **Notificações Push**: Envio de notificações push para alertar sobre novidades, lançamentos e outras atualizações.
-- **Interface Diferenciada**: Design otimizado para Android e iOS com um layout intuitivo.
+## Tecnologias Utilizadas
+- **.NET MAUI**
+- **C#**
+- **Preferences** (para armazenamento local)
+- **API TMDb** (The Movie Database)
+- **Firebase Cloud Messaging** (para notificações push)
 
-## Tecnologias Usadas
+## Configuração do Ambiente
+### Requisitos
+- .NET 7 ou superior
+- SDK do .NET MAUI instalado
+- Conta no TMDb para obter a chave da API
+- Conta no Firebase para configurar as notificações push
 
-- **.NET MAUI**: Framework cross-platform para construção de aplicativos móveis.
-- **TMDb API**: API pública para obter dados sobre filmes e séries.
-- **OAuth**: Autenticação segura utilizando OAuth.
-- **Firebase Cloud Messaging**: Serviço de envio de notificações push para dispositivos móveis.
-  
-## Pré-requisitos
+### Passo a Passo
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/lordkaps/GestorDeFilmes.git
+   cd GestorDeFilmes
+   ```
+2. **Configure as credenciais da API TMDb**
+   - Crie um arquivo **secrets.json** no diretório do projeto e adicione:
+     ```json
+     {
+       "TMDbApiKey": "SUA_CHAVE_AQUI"
+     }
+     ```
+3. **Configure o Firebase**
+   - Baixe o arquivo **google-services.json** (Android) e **GoogleService-Info.plist** (iOS) e coloque nas respectivas pastas do projeto.
+4. **Restaure pacotes e rode o projeto**
+   ```bash
+   dotnet restore
+   dotnet build
+   dotnet maui run
+   ```
 
-- **.NET 7.0 ou superior**
-- **Visual Studio 2022 ou superior** com suporte para .NET MAUI
-- **Conta no Firebase** para configurar o envio de notificações push
+## Estrutura do Projeto
+```
+GestorDeFilmes/
+│── Models/          # Modelos de dados
+│── Views/           # Telas do aplicativo
+│── ViewModels/      # Lógica de negócio
+│── Services/        # Integração com API TMDb e Firebase
+│── Resources/       # Imagens, fontes e estilos
+│── App.xaml         # Configuração global do aplicativo
+│── MainPage.xaml    # Tela principal
+└── Program.cs       # Ponto de entrada do app
+```
+
