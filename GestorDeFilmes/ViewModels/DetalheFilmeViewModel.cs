@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
 using GestorDeFilmes.Core.Utils;
 using GestorDeFilmes.Models;
 using GestorDeFilmes.Services.Interfaces;
@@ -8,6 +9,7 @@ namespace GestorDeFilmes.ViewModels
 {
     public partial class DetalheFilmeViewModel : ObservableObject
     {
+        #region Propriedades
         [ObservableProperty]
         public Filme filme = new();
 
@@ -15,7 +17,9 @@ namespace GestorDeFilmes.ViewModels
         private string lancamento;
 
         private readonly IShareService _shareService;
+        #endregion
 
+        #region Inicial
         public DetalheFilmeViewModel(IShareService shareService)
         {
             _shareService = shareService;
@@ -24,17 +28,6 @@ namespace GestorDeFilmes.ViewModels
         public async void OnAppearing()
         {
             CarregaFilme();
-        }
-
-        [RelayCommand]
-        private async Task Compartilhar()
-        {
-            bool nativo = await Application.Current.MainPage.DisplayAlert("Compartilhamento", "Qual método de compartilhamento?", "Nativo", "Padrão");
-
-            if (nativo)
-                await CompartilharFilmeNativoAsync();
-            else
-                await CompartilharFilmeAsync();
         }
 
         private void CarregaFilme()
@@ -46,7 +39,22 @@ namespace GestorDeFilmes.ViewModels
                 Lancamento = Filme.LancamentoFormatado;
             }
         }
+        #endregion
 
+        #region Commands
+        [RelayCommand]
+        private async Task Compartilhar()
+        {
+            bool nativo = await Application.Current.MainPage.DisplayAlert("Compartilhamento", "Qual método de compartilhamento?", "Nativo", "Padrão");
+
+            if (nativo)
+                await CompartilharFilmeNativoAsync();
+            else
+                await CompartilharFilmeAsync();
+        }
+        #endregion
+
+        #region Funções
         private async Task CompartilharFilmeAsync()
         {
             if (Filme == null) return;
@@ -107,5 +115,6 @@ namespace GestorDeFilmes.ViewModels
                 return string.Empty;
             }
         }
+        #endregion
     }
 }

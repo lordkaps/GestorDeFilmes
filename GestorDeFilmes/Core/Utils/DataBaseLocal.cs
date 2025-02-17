@@ -1,13 +1,12 @@
-﻿using GestorDeFilmes.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
+
+using GestorDeFilmes.Models;
 
 namespace GestorDeFilmes.Core.Utils
-{
+{   
+    /// <summary>
+    /// Classe estatica criada para salvar de forma simples e localmente os filmes favoritos.
+    /// </summary>
     public static class DataBaseLocal
     {
         public static void SalvarListaDeFilmes(List<Filme> filmes)

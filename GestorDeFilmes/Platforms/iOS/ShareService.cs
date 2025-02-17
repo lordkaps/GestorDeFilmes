@@ -1,5 +1,7 @@
 ﻿using Foundation;
+
 using GestorDeFilmes.Services.Interfaces;
+
 using UIKit;
 
 namespace GestorDeFilmes.Platforms.iOS

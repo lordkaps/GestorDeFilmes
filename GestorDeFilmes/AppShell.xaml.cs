@@ -1,7 +1,4 @@
-﻿using GestorDeFilmes.Views;
-using System.Reflection;
-
-namespace GestorDeFilmes
+﻿namespace GestorDeFilmes
 {
     public partial class AppShell : Shell
     {

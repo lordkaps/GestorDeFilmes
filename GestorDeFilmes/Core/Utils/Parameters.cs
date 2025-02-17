@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GestorDeFilmes.Core.Utils
+﻿namespace GestorDeFilmes.Core.Utils
 {
     /// <summary>
     /// Classe do tipo Singleton para armazenar e gerenciar parâmetros temporários e utilizar para passar dados/objetos entre as ViewModels.

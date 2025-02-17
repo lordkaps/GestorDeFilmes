@@ -1,6 +1,5 @@
 ﻿using GestorDeFilmes.Services.Interfaces;
-using Microsoft.Extensions.Logging;
-using Microsoft.Maui.LifecycleEvents;
+
 using Plugin.FirebasePushNotifications;
 
 namespace GestorDeFilmes

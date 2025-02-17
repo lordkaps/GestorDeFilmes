@@ -1,15 +1,18 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+
 using GestorDeFilmes.Core.Utils;
 using GestorDeFilmes.Models;
 using GestorDeFilmes.Services;
 using GestorDeFilmes.Views;
+
 using Plugin.FirebasePushNotifications;
 
 namespace GestorDeFilmes.ViewModels
 {
     public partial class MainPageViewModel : ObservableObject
     {
+        #region Propriedades Observadas
         [ObservableProperty]
         private string textoLogin = "Efetuar Login";
 
@@ -27,16 +30,18 @@ namespace GestorDeFilmes.ViewModels
 
         [ObservableProperty]
         private List<Filme> listaFilmeFavorito;
+        #endregion
 
-
+        #region Propriedades
         private readonly HttpClient _httpClient = new();
         private readonly TMDbService _tmdbService = new();
         private Usuario _usuarioLogado;
         private Sessao _sessao;
 
         public TaskCompletionSource<string> TaskCompletion;
+        #endregion
 
-
+        #region Inicial
         public MainPageViewModel() { }
 
         public async void OnAppearing()
@@ -62,7 +67,9 @@ namespace GestorDeFilmes.ViewModels
                 });
             }
         }
+        #endregion
 
+        #region Commands
         [RelayCommand]
         private async Task Search(string busca)
         {
@@ -101,19 +108,21 @@ namespace GestorDeFilmes.ViewModels
 
             Parameter.Instance.AddParameter(nameof(DetalheFilmeViewModel), filme);
 
-
+            //TODO criar classe de extenção para Navigation
             await Application.Current!.MainPage!.Navigation.PushAsync(new DetalheFilmePage(new Platforms.Android.ShareService()));
         }
 
         [RelayCommand]
-        private void MarcarComoFavorito(Filme filme)
+        private async Task MarcarComoFavorito(Filme filme)
         {
             if (filme == null) return;
             filme.Favorito = !filme.Favorito;
 
-            AtualizaListaFavorito();
+            await AtualizaListaFavorito();
         }
+        #endregion
 
+        #region Funções
         private async Task ExecutarLogin()
         {
             TaskCompletion = new TaskCompletionSource<string>();
@@ -134,12 +143,12 @@ namespace GestorDeFilmes.ViewModels
             });
         }
 
-        private void AtualizaListaFavorito()
+        private async Task AtualizaListaFavorito()
         {
             ListaFilmeFavorito = ListaFilme.Where(f => f.Favorito).ToList();
             DataBaseLocal.SalvarListaDeFilmes(ListaFilmeFavorito);
             if (!Deslogado)
-                SincronizaFavoritosComAPI();
+                await SincronizaFavoritosComAPI();
         }
 
         private void MarcaFavoritosSalvos()
@@ -153,17 +162,24 @@ namespace GestorDeFilmes.ViewModels
             });
         }
 
-        private void SincronizaFavoritosComAPI()
+        private async Task SincronizaFavoritosComAPI()
         {
             if (ListaFilmeFavorito != null && ListaFilmeFavorito.Count > 0)
             {
-                ListaFilmeFavorito.ForEach(async f =>
-                {
-                    await _tmdbService.AdicionarFilmeFavorito(_usuarioLogado.IDUsuario, f.Id, f.Favorito, _sessao.SessaoCode);
-                });
-            }
-        }
+                var tasks = ListaFilmeFavorito.Select(f =>
+                    _tmdbService.AdicionarFilmeFavorito(_usuarioLogado.IDUsuario, f.Id, f.Favorito, _sessao.SessaoCode)
+                ).ToList();
 
+                var resultados = await Task.WhenAll(tasks);
+
+                if (resultados.Any(r => r))
+                {
+                    await MainThread.InvokeOnMainThreadAsync(async () =>
+                        await Application.Current.MainPage.DisplayAlert("Sincronização!", "Filmes adicionados como favoritos", "ok"));
+                }
+            }
+
+        }
         private async void GetPermissaoNotification()
         {
             var authorizationStatusEnum = await INotificationPermissions.Current.GetAuthorizationStatusAsync();
@@ -177,5 +193,6 @@ namespace GestorDeFilmes.ViewModels
             if (authorizationStatusEnum == Plugin.FirebasePushNotifications.Model.AuthorizationStatus.Granted)
                 await IFirebasePushNotification.Current.RegisterForPushNotificationsAsync();
         }
+        #endregion
     }
 }

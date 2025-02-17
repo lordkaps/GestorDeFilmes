@@ -1,6 +1,7 @@
 ﻿
-using CommunityToolkit.Mvvm.ComponentModel;
 using System.Text.Json.Serialization;
+
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace GestorDeFilmes.Models
 {

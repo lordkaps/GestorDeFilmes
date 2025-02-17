@@ -1,5 +1,7 @@
 ﻿using Foundation;
+
 using UIKit;
+
 using UserNotifications;
 
 namespace GestorDeFilmes

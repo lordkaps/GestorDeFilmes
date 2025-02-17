@@ -1,8 +1,11 @@
-﻿using GestorDeFilmes.Models;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using GestorDeFilmes.Models;
+
+using static Android.Gms.Common.Apis.Api;
 
 namespace GestorDeFilmes.Services
 {
@@ -128,21 +131,31 @@ namespace GestorDeFilmes.Services
             return null;
         }
 
-        public async Task AdicionarFilmeFavorito(int accountId, int filmeId, bool favorito, string sessionId)
+        public async Task<bool> AdicionarFilmeFavorito(int accountId, int filmeId, bool favorito, string sessionId)
         {
             var url = $"{TMDbSettings.UrlBase}account/{accountId}/favorite?session_id={sessionId}";
 
-            var data = new
+            var request = new HttpRequestMessage
             {
-                media_type = "movie",
-                media_id = filmeId,
-                favorite = favorito
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(url),
+                Headers =
+                {
+                    { "accept", "application/json" },
+                    { "Authorization", $"{TMDbSettings.Bearer}"},
+                },
+                Content = new StringContent($"{{\"media_type\":\"movie\",\"media_id\":{filmeId},\"favorite\":true}}")
+                {
+                    Headers =
+                    {
+                        ContentType = new MediaTypeHeaderValue("application/json")
+                    }
+                }
             };
 
-            var jsonData = JsonSerializer.Serialize(data);
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync(url, content);
+            using var response = await _httpClient.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+            return response.IsSuccessStatusCode;
         }
     }
 
@@ -163,4 +176,31 @@ namespace GestorDeFilmes.Services
         [JsonPropertyName("username")]
         public string NomeUsuario { get; set; }
     }
+
+
+    /*
+     var request = new HttpRequestMessage
+{
+    Method = HttpMethod.Post,
+    RequestUri = new Uri("https://api.themoviedb.org/3/account/21814271/favorite?session_id=0a23941ffc44dd77a039b4a0231517bd7a1e842e"),
+    Headers =
+    {
+        { "accept", "application/json" },
+        { "Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZWI1OGMxYTJhYWE1YTJkZmU3NmUyNTYzZTUzZmU0YSIsIm5iZiI6MTczOTM5Mjc2NC40MzgwMDAyLCJzdWIiOiI2N2FkMDZmY2Q2M2U5ZGVlZWEzNmQ1OWQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.Jl2shUN7T8SRHuJMopNrVsOkGnmvxW395vpuQVmYD10" },
+    },
+    Content = new StringContent("{\"media_type\":\"movie\",\"media_id\":939243,\"favorite\":true}")
+    {
+        Headers =
+        {
+            ContentType = new MediaTypeHeaderValue("application/json")
+        }
+    }
+};
+using (var response = await client.SendAsync(request))
+{
+    response.EnsureSuccessStatusCode();
+    var body = await response.Content.ReadAsStringAsync();
+    Console.WriteLine(body);
+}
+     */
 }

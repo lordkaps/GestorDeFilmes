@@ -1,6 +1,5 @@
 using GestorDeFilmes.Models;
 using GestorDeFilmes.ViewModels;
-using System.IO;
 
 namespace GestorDeFilmes.Views;
 

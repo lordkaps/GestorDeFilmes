@@ -2,8 +2,10 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+
 using AndroidX.Core.App;
 using AndroidX.Core.Content;
+
 using GestorDeFilmes.ViewModels;
 using GestorDeFilmes.Views;
 

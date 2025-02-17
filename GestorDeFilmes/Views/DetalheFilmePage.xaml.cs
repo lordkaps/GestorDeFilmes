@@ -1,4 +1,3 @@
-using GestorDeFilmes.Models;
 using GestorDeFilmes.Services.Interfaces;
 using GestorDeFilmes.ViewModels;
 

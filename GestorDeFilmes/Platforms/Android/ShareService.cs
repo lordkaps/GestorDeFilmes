@@ -1,5 +1,7 @@
 ﻿using Android.Content;
+
 using GestorDeFilmes.Services.Interfaces;
+
 using Application = Android.App.Application;
 
 namespace GestorDeFilmes.Platforms.Android
