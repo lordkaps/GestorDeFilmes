@@ -157,6 +157,34 @@ namespace GestorDeFilmes.Services
             response.EnsureSuccessStatusCode();
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<List<Filme>> GetListFilmeFavorito(int accountId, string sessionId)
+        {
+            var url = $"{TMDbSettings.UrlBase}account/{accountId}/favorite/movies?language=pt-BR&page=1&session_id={sessionId}&sort_by=created_at.asc";
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(url), //"https://api.themoviedb.org/3/account/21814271/favorite/movies?language=pt-BR&page=1&session_id=1515151&sort_by=created_at.asc"),
+                Headers =
+                {
+                    { "accept", "application/json" },
+                    { "Authorization", $"{TMDbSettings.Bearer}"},
+                },
+            };
+
+            var response = await _httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var movieResponse = JsonSerializer.Deserialize<FilmeResponse>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                List<Filme> ListaFilme = movieResponse?.Results ?? new List<Filme>();
+                return ListaFilme;
+            }
+
+            return new List<Filme>();
+        }
     }
 
     public class Sessao

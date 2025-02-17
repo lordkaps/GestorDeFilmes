@@ -93,10 +93,15 @@ namespace GestorDeFilmes.ViewModels
             try
             {
                 await ExecutarLogin();
+                await ObterFavoritosAPI();
+                await AtualizaListaFavorito();
             }
             catch (Exception ex)
             {
-                return;
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await Application.Current.MainPage.DisplayAlert("Ops!",ex.Message, "ok");
+                });
             }
         }
 
@@ -107,8 +112,6 @@ namespace GestorDeFilmes.ViewModels
                 return;
 
             Parameter.Instance.AddParameter(nameof(DetalheFilmeViewModel), filme);
-
-            //TODO criar classe de extenção para Navigation
             await Application.Current!.MainPage!.Navigation.PushAsync(new DetalheFilmePage(new Platforms.Android.ShareService()));
         }
 
@@ -156,9 +159,7 @@ namespace GestorDeFilmes.ViewModels
             ListaFilme.ForEach(filme =>
             {
                 if (ListaFilmeFavorito.Any(f => f.Id == filme.Id))
-                {
                     filme.Favorito = true;
-                }
             });
         }
 
@@ -180,6 +181,26 @@ namespace GestorDeFilmes.ViewModels
             }
 
         }
+
+        private async Task ObterFavoritosAPI()
+        {
+            if (!Deslogado)
+            {
+                var listaFilmeFavoritoLocal = ListaFilmeFavorito;
+                var listaFilmeFavoritoAPI = await _tmdbService.GetListFilmeFavorito(_usuarioLogado.IDUsuario, _sessao.SessaoCode);
+                if (listaFilmeFavoritoAPI != null && listaFilmeFavoritoAPI.Count > 0)
+                {
+                    foreach (var filme in listaFilmeFavoritoAPI)
+                        if (!listaFilmeFavoritoLocal.Any(f => f.Id == filme.Id))
+                        {
+                            listaFilmeFavoritoLocal.Add(filme);
+                        }
+                    ListaFilmeFavorito = listaFilmeFavoritoLocal;
+                    MarcaFavoritosSalvos();
+                }
+            }
+        }
+
         private async void GetPermissaoNotification()
         {
             var authorizationStatusEnum = await INotificationPermissions.Current.GetAuthorizationStatusAsync();
