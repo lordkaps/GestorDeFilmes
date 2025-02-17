@@ -16,7 +16,7 @@ Este projeto integra-se com a API do TMDb para buscar informações sobre filmes
 
 - **.NET MAUI**: Framework cross-platform para construção de aplicativos móveis.
 - **TMDb API**: API pública para obter dados sobre filmes e séries.
-- **OAuth**: Autenticação segura utilizando OAuth 2.0.
+- **OAuth**: Autenticação segura utilizando OAuth.
 - **Firebase Cloud Messaging**: Serviço de envio de notificações push para dispositivos móveis.
   
 ## Pré-requisitos
