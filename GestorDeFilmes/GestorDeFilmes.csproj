@@ -86,6 +86,12 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Update="Platforms\Android\google-services.json">
+	    <CopyToOutputDirectory></CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionGestorDeFilmesHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

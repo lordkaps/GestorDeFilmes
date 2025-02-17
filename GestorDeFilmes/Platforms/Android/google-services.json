@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "913177888708",
+    "project_id": "gestordefilmes-279a5",
+    "storage_bucket": "gestordefilmes-279a5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913177888708:android:3ffcc7e6327c3af2454691",
+        "android_client_info": {
+          "package_name": "com.augustokaps.gestordefilmes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBQaYmsf7qa3-pbL-_W65LMnJCHBtVFqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -155,11 +155,11 @@ namespace GestorDeFilmes.ViewModels
 
         private void SincronizaFavoritosComAPI()
         {
-            if (ListaFilmeFavorito != null && ListaFilmeFavorito.Count > 0) 
+            if (ListaFilmeFavorito != null && ListaFilmeFavorito.Count > 0)
             {
-                ListaFilmeFavorito.ForEach(async f => 
+                ListaFilmeFavorito.ForEach(async f =>
                 {
-                    await _tmdbService.AdicionarFilmeFavorito(_usuarioLogado.IDUsuario, f.Id, f.Favorito, _sessao.SessaoCode); 
+                    await _tmdbService.AdicionarFilmeFavorito(_usuarioLogado.IDUsuario, f.Id, f.Favorito, _sessao.SessaoCode);
                 });
             }
         }
@@ -171,7 +171,9 @@ namespace GestorDeFilmes.ViewModels
             {
                 await INotificationPermissions.Current.RequestPermissionAsync();
             }
-
+#if ANDROID
+            var token = CrossFirebasePushNotification.Current.Token;
+#endif
             if (authorizationStatusEnum == Plugin.FirebasePushNotifications.Model.AuthorizationStatus.Granted)
                 await IFirebasePushNotification.Current.RegisterForPushNotificationsAsync();
         }
