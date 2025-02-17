@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using GestorDeFilmes.Core.Utils;
 using GestorDeFilmes.Models;
+using GestorDeFilmes.Services.Interfaces;
 
 namespace GestorDeFilmes.ViewModels
 {
@@ -13,7 +14,12 @@ namespace GestorDeFilmes.ViewModels
         [ObservableProperty]
         private string lancamento;
 
-        public DetalheFilmeViewModel(){}
+        private readonly IShareService _shareService;
+
+        public DetalheFilmeViewModel(IShareService shareService)
+        {
+            _shareService = shareService;
+        }
 
         public async void OnAppearing()
         {
@@ -23,7 +29,12 @@ namespace GestorDeFilmes.ViewModels
         [RelayCommand]
         private async Task Compartilhar()
         {
-            await CompartilharFilmeAsync();
+            bool nativo = await Application.Current.MainPage.DisplayAlert("Compartilhamento", "Qual método de compartilhamento?", "Nativo", "Padrão");
+
+            if (nativo)
+                await CompartilharFilmeNativoAsync();
+            else
+                await CompartilharFilmeAsync();
         }
 
         private void CarregaFilme()
@@ -54,12 +65,12 @@ namespace GestorDeFilmes.ViewModels
                     });
                     return;
                 }
-                
+
                 await Share.Default.RequestAsync(new ShareFileRequest
                 {
                     Title = mensagem,
                     File = new ShareFile(localFilePath),
-                    
+
                 });
             }
             catch (Exception ex)
@@ -69,6 +80,11 @@ namespace GestorDeFilmes.ViewModels
                     await Application.Current.MainPage.DisplayAlert("Erro", $"Ocorreu um erro: {ex.Message}", "OK");
                 });
             }
+        }
+
+        private async Task CompartilharFilmeNativoAsync()
+        {
+            await _shareService.ShareText($"🎬 *{Filme.Title}*\n📅 Lançamento: {Filme.ReleaseDate}\n📖 {Filme.Overview}\n🔗 Mais detalhes: https://www.themoviedb.org/movie/{Filme.Id}");
         }
 
         private async Task<string> BaixarImagemAsync(string imageUrl)

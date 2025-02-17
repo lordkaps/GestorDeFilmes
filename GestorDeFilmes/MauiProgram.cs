@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GestorDeFilmes.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using Plugin.FirebasePushNotifications;
 
@@ -19,8 +20,10 @@ namespace GestorDeFilmes
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-#if DEBUG
-            builder.Logging.AddDebug();
+#if ANDROID
+            builder.Services.AddSingleton<IShareService, Platforms.Android.ShareService>();
+#elif IOS
+        builder.Services.AddSingleton<IShareService, Platforms.iOS.ShareService>();
 #endif
 
             return builder.Build();

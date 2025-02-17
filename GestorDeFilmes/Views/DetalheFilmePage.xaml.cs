@@ -1,14 +1,15 @@
 using GestorDeFilmes.Models;
+using GestorDeFilmes.Services.Interfaces;
 using GestorDeFilmes.ViewModels;
 
 namespace GestorDeFilmes.Views;
 
 public partial class DetalheFilmePage : ContentPage
 {
-    public DetalheFilmePage()
+    public DetalheFilmePage(IShareService shareService)
 	{
 		InitializeComponent();
-        BindingContext = new DetalheFilmeViewModel();
+        BindingContext = new DetalheFilmeViewModel(shareService);
     }
 
     protected override void OnAppearing()

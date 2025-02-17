@@ -101,8 +101,8 @@ namespace GestorDeFilmes.ViewModels
 
             Parameter.Instance.AddParameter(nameof(DetalheFilmeViewModel), filme);
 
-            await Application.Current!.MainPage!.Navigation.PushAsync(new DetalheFilmePage());
-            //await Shell.Current.GoToAsync(nameof(DetalheFilmePage), true);
+
+            await Application.Current!.MainPage!.Navigation.PushAsync(new DetalheFilmePage(new Platforms.Android.ShareService()));
         }
 
         [RelayCommand]
